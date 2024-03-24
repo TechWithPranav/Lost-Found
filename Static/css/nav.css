@@ -1,0 +1,30 @@
+
+
+.nav-link {
+    box-shadow: inset 0 0 0 0 #198754;
+    /* color: #54b3d6; */
+    color: #198754;
+    margin: 0 -0.25rem;
+    /* font-size: larger; */
+    font-weight: 700;
+    padding: 0 0.25rem;
+    transition: color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.nav-link:hover {
+    box-shadow: inset 100px 0 0 0 #198754;
+    color: white;
+}
+
+
+
+
+
+
+.navbar-nav{
+    display: flex;
+    justify-content: center;
+    gap: 5em;
+    /* border: 4px solid red; */
+    width: 100%;
+}
