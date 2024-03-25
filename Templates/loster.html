@@ -52,6 +52,20 @@
         .item-info h3 {
             /* text-stroke: 1px black; Stroke effect for username */
         }
+
+        .scrollable-buttons {
+    max-height: 150px; /* Set the maximum height for the scrollable area */
+    overflow-y: auto; /* Enable vertical scrollbar */
+}
+
+.btn_place {
+    /* Add styles for the buttons as needed */
+    /* For example: */
+    display: block;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
     </style>
 </head>
 
@@ -75,14 +89,20 @@
         <div class="input-group mb-3">
             <input type="text" class="form-control" id="searchInput" placeholder="Search for places..."
                 aria-label="Search for places" aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary" type="button" id="addPlaceBtn">Add Place</button>
+            <button class="btn btn-outline-secondary mx-2 round" type="button" id="addPlaceBtn" >Add Place</button>
         </div>
 
         <div class="list-group" id="placesDropdown" style="display: none;">
             <!-- for displaying particular collections of places  -->
+    <div class="scrollable-buttons">
+        {% if collections %}
             {% for place in collections %}
-            <button type="button" id="" class="btn_place list-group-item list-group-item-action">{{ place }}</button>
+                <button type="button" id="" class="btn_place list-group-item list-group-item-action">{{ place }}</button>
             {% endfor %}
+        {% else %}
+            <button type="button" id="" class="btn_place list-group-item list-group-item-action">No buttons</button>
+        {% endif %}
+    </div>
         </div>
 
     </div>
@@ -93,7 +113,7 @@
 
     <!-- ----------------------- loster cards for particular place ---------------------------  -->
 
-    <div class="container mt-3">
+    <div class="container mt-5">
         <div class="row">
             {% if documents %}
             {% for doc in documents %}
@@ -116,6 +136,19 @@
         </div>
     </div>
 
+    <!-- <h1>Place Name: {{ place_name }}</h1>
+
+    <h2>Documents:</h2>
+    <ul>
+        {% if documents %}
+            {% for doc in documents %}
+                <li>Document ID: {{ doc.username }}, Name: {{ doc.Name }}, Category: {{ doc.Category }}</li>
+            {% endfor %}
+        {% else %}
+            <li>No documents found.</li>
+        {% endif %}
+    </ul>
+ -->
 
 
 
@@ -152,21 +185,38 @@
         });
 
 
+
+
+
+
+
+
+
+        // for seach bar  ----------------------------------
         document.addEventListener('DOMContentLoaded', function () {
-            var searchInput = document.getElementById('searchInput');
-            var placesDropdown = document.getElementById('placesDropdown');
+    var searchInput = document.getElementById('searchInput');
+    var placesDropdown = document.getElementById('placesDropdown');
 
-            searchInput.addEventListener('focus', function () {
-                placesDropdown.style.display = 'block';
-            });
+    // Show the places dropdown when the search input is focused
+    searchInput.addEventListener('focus', function () {
+        placesDropdown.style.display = 'block';
+    });
 
-            searchInput.addEventListener('blur', function () {
-                setTimeout(function () {
-                    placesDropdown.style.display = 'none';
-                }, 200);
-            });
-        });
+    // Hide the places dropdown when the search input loses focus,
+    // but only if the user didn't click on a button inside the dropdown
+    searchInput.addEventListener('blur', function (event) {
+        setTimeout(function () {
+            if (!placesDropdown.contains(event.relatedTarget)) {
+                placesDropdown.style.display = 'none';
+            }
+        }, 200);
+    });
 
+    // Keep the places dropdown visible even after selecting an item
+    placesDropdown.addEventListener('mouseleave', function () {
+        searchInput.focus();
+    });
+});
 
 
 
@@ -192,7 +242,7 @@
 
                 // Send a POST request to '/loster' endpoint with placeName data
                 var jsonData = JSON.stringify({ placeName: placeName });
-                fetch('/loster_handler', {
+                fetch('/loster', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -203,7 +253,7 @@
             if (response.ok) {
                 console.log('POST request successful');
                 // Redirect to loster_handler.html with place_name as a query parameter
-                window.location.href = '/loster_handler?place_name=' + encodeURIComponent(placeName);
+                window.location.href = '/loster?place_name=' + encodeURIComponent(placeName);
             } else {
                 console.error('POST request failed');
             }
@@ -215,6 +265,9 @@
 
             });
         });
+
+
+
 
 
 

@@ -124,51 +124,73 @@ def profile():
 
 @app.route('/loster', methods=['GET', 'POST'])
 def loster():
-    
-
-    if request.method == 'POST':
-        # # Parse JSON data from the request body
-        # place_data = request.json   
-        # place_name = place_data.get('placeName')
-
-        # # Redirect to '/loster_handler' endpoint with placeName data
-        # return redirect(url_for('lost_hand', place_name=place_name))
-        pass
-    else:
-         exclude_collections = ['users']
-         all_collections = db.list_collection_names()
-         collections_to_display = [c for c in all_collections if c not in exclude_collections]
-         return render_template('loster.html', collections=collections_to_display)
-   
-
-
-
-
-
-@app.route('/loster_handler', methods=['GET', 'POST'])
-def loster_handler():
-
     documents = None
     if request.method == 'POST':
-        # Get the place name from the JSON data in the request
+        # Handle POST requests
         place_data = request.json
         place_name = place_data.get('placeName')
 
         # Fetch documents from the collection associated with place_name
-        collection = db.get_collection(place_name)
+        collection = db[place_name]
         documents = list(collection.find())
 
+         # Get all collections to display in the dropdown
+        all_collections = db.list_collection_names()
+        collections_to_display = [c for c in all_collections if c not in ['users']]
 
-        # Redirect to the same route but with GET method to render the template
-        return redirect(url_for('loster_handler', place_name=place_name,documents=documents))
+        # Redirect to the same route with place_name as query parameter
+        return render_template('loster.html', place_name=place_name, documents=documents, collections=collections_to_display)
+
+    else:
+        # Handle GET requests
+        place_name = request.args.get('place_name')
+        if place_name:
+            # Fetch documents from the collection associated with place_name
+            collection = db[place_name]
+            documents = list(collection.find())
+
+            
+            # Get all collections to display in the dropdown
+            all_collections = db.list_collection_names()
+            collections_to_display = [c for c in all_collections if c not in ['users']]
+
+            return render_template('loster.html', place_name=place_name, documents=documents, collections=collections_to_display)
+        
+        
+        # If no place name is provided, render the template with available collections
+        exclude_collections = ['users']
+        all_collections = db.list_collection_names()
+        collections_to_display = [c for c in all_collections if c not in exclude_collections]
+        return render_template('loster.html', collections=collections_to_display)
+
+
+
+
+
+# @app.route('/loster_handler', methods=['GET', 'POST'])
+# def loster_handler():
+
+#     documents = None
+#     if request.method == 'POST':
+#         # Get the place name from the JSON data in the request
+#         place_data = request.json
+#         place_name = place_data.get('placeName')
+
+#         # Fetch documents from the collection associated with place_name
+#         collection = db.get_collection(place_name)
+#         documents = list(collection.find())
+
+
+#         # Redirect to the same route but with GET method to render the template
+#         return redirect(url_for('loster_handler', place_name=place_name,documents=documents))
     
-    # Get the place name from the query parameters if it exists
-    place_name = request.args.get('place_name')
+#     # Get the place name from the query parameters if it exists
+#     place_name = request.args.get('place_name')
 
-    collection = db.get_collection(place_name)
-    documents = list(collection.find())
-    # Render the template with the place name
-    return render_template('loster_handler.html', place_name=place_name,documents=documents)
+#     collection = db.get_collection(place_name)
+#     documents = list(collection.find())
+#     # Render the template with the place name
+#     return render_template('loster_handler.html', place_name=place_name,documents=documents)
 
 
 
