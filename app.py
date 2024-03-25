@@ -1,8 +1,9 @@
 import secrets
 import os
-from flask import Flask, render_template, redirect, request, url_for, flash
+from flask import Flask, render_template, redirect, request, session, url_for, flash,jsonify
 from pymongo import MongoClient
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
+from bson import ObjectId  # Import ObjectId from bson module
 
 app = Flask(__name__)
 
@@ -109,6 +110,94 @@ def profile():
 
     user_data = users_collection.find_one({'username':current_user.username})
     return render_template('profile.html',user_data= user_data)    
+
+
+
+
+
+
+# ------------loster ---------------- 
+
+
+
+
+
+@app.route('/loster', methods=['GET', 'POST'])
+def loster():
+    
+
+    if request.method == 'POST':
+        # # Parse JSON data from the request body
+        # place_data = request.json   
+        # place_name = place_data.get('placeName')
+
+        # # Redirect to '/loster_handler' endpoint with placeName data
+        # return redirect(url_for('lost_hand', place_name=place_name))
+        pass
+    else:
+         exclude_collections = ['users']
+         all_collections = db.list_collection_names()
+         collections_to_display = [c for c in all_collections if c not in exclude_collections]
+         return render_template('loster.html', collections=collections_to_display)
+   
+
+
+
+
+
+@app.route('/loster_handler', methods=['GET', 'POST'])
+def loster_handler():
+
+    documents = None
+    if request.method == 'POST':
+        # Get the place name from the JSON data in the request
+        place_data = request.json
+        place_name = place_data.get('placeName')
+
+        # Fetch documents from the collection associated with place_name
+        collection = db.get_collection(place_name)
+        documents = list(collection.find())
+
+
+        # Redirect to the same route but with GET method to render the template
+        return redirect(url_for('loster_handler', place_name=place_name,documents=documents))
+    
+    # Get the place name from the query parameters if it exists
+    place_name = request.args.get('place_name')
+
+    collection = db.get_collection(place_name)
+    documents = list(collection.find())
+    # Render the template with the place name
+    return render_template('loster_handler.html', place_name=place_name,documents=documents)
+
+
+
+
+
+
+@app.route('/add_place', methods=['POST'])
+def add_place():
+    place_name = request.form['place_name']
+    
+    # Check if the collection already exists
+    if place_name in db.list_collection_names():
+        return jsonify({'message': f'Collection {place_name} already exists'}), 400
+    
+    # Create a new collection
+    db.create_collection(place_name)
+    
+
+    
+    return jsonify({'message': f'Collection {place_name} created successfully'}), 200
+
+
+
+
+
+# temp purpose 
+
+
+
 
 
 
