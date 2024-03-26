@@ -243,17 +243,95 @@ def insert():
 
 #--------------- update ----------------------
 
-app.route('/update_card',methods = ['GET','POST'])
+@app.route('/update_card',methods = ['GET','POST'])
 def update_card():
-    return render_template('insert.html')
+
+    
+    username = request.form.get('username')
+    place = request.form.get('place_name')
+    # print(place)
+    get_collection_of_place = db[place]
+    req_doc = get_collection_of_place.find_one({'username':username})
+    return render_template('update.html',documents=req_doc)
 
 
 
-#--------------- delet card ----------------------
+# # ----------- update main  when click one button final this will updayte the records--------------- 
 
-app.route('/delete_card',methods = ['GET','POST'])
-def update_card():
-    return render_template('insert.html')
+@app.route('/update_card_main', methods=['GET', 'POST'])
+def update_card_main():
+    if request.method == 'POST':
+        try:
+            # Extract form data
+            itemName = request.form['itemName']
+            itemCategory = request.form['itemCategory']
+            username = request.form['username'].strip()
+            userEmail = request.form['userEmail']
+            date = request.form['date']
+            status = request.form['status']
+            description = request.form['description']
+            place_name = request.form.get('place_name')
+            
+          
+            
+            # Get collection
+            place_collection = db[place_name]
+            print(place_collection.name)
+   
+
+            update_data = {
+             'itemName': itemName,
+             'itemCategory': itemCategory,
+             'username': username,
+             'userEmail': userEmail,
+             'date': date,
+             'status': status,
+             'description': description,
+             'place': place_name,
+             }
+
+            print(update_data)
+            # place_collection.update_one({'username':username},{'$set':update_data})
+             # Perform update operation
+            cur = current_user.username
+            print(username)
+            print(cur)
+            result = place_collection.update_one({'username': username}, {'$set': update_data})
+            print("Update Result:", result.raw_result)
+
+
+            # Check if any update was successful
+            print("Data updated successfully!")
+            return 'Data updated successfully!'
+        except Exception as e:
+            print("Error:", e)
+            return 'Failed to update data. Error: ' + str(e)
+    else:
+        return 'Invalid request method. Only POST requests are allowed.'
+
+
+
+
+
+
+#--------------- delete card ----------------------
+
+@app.route('/delete_card',methods = ['GET','POST'])
+def delete_card():
+    cur = current_user.username
+    main_user = request.form['username']
+    place = request.form['place_name']
+    print(main_user)
+    print(cur)
+
+    if cur == main_user:
+        place_collection = db[place]
+        result = place_collection.delete_one({'username':main_user})
+        print(result)
+    else:
+        return "login again to delete the specific card or the card you are trying to delete is not yours!!!"
+
+    return "Card Deleted Successfully"
 
 
 

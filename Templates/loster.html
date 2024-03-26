@@ -201,30 +201,6 @@
 
     <!-- ----------------------- loster cards for particular place ---------------------------  -->
 
-    <!-- <div class="container mt-5">
-        <div class="row">
-            {% if documents %}
-            {% for doc in documents %}
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Lost by: {{ doc.username }}</h5>
-                        <p class="card-text">Name: {{ doc.Name }}</p>
-                        <p class="card-text">Item Name: {{ doc.ItemName }}</p>
-                        <p class="card-text">Category: {{ doc.Category }}</p>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-            {% else %}
-            <div class="col">
-                <p>No documents found.</p>
-            </div>
-            {% endif %}
-        </div>
-    </div> -->
-
-
 
 
 
@@ -242,7 +218,7 @@
                     </div>
                     
                     <div class="card-body">
-                        <h5 class="card-title">Item Name: {{ doc.itemName }}</h5>
+                        <h5 class="card-title">Item Name: {{doc.itemName}}</h5>
                         <p class="card-text">Item Category: {{ doc.itemCategory }}</p>
                         <p class="card-text">Username: {{ doc.username }}</p>
                         <p class="card-text">User Email: {{ doc.userEmail }}</p>
@@ -251,12 +227,12 @@
                         <p class="card-text">Place: {{ doc.place }}</p>
                         <p class="card-text">Description: {{ doc.description }}</p>
                     </div>
-                    <div class="card-footer d-flex justify-content-evenly">
+                    <div class="card-footer d-flex justify-content-evenly"> 
                         
                     <form action="/update_card" method="post">
                         <!-- Hidden input fields to send place_name and username -->
-                        <input type="hidden" name="place_name" value="{{ doc.place }}">
-                        <input type="hidden" name="username" value="{{ doc.username }}">
+                        <input type="hidden" name="place_name" value="{{doc.place}}">
+                        <input type="hidden" name="username" value="{{doc.username}}">
                         
                         <!-- Submit button -->
                         <button type="submit" class="btn btn-outline-success">Update</button>
@@ -264,8 +240,8 @@
 
                     <form action="/delete_card" method="post">
                        
-                        <input type="hidden" name="place_name" value="{{ doc.place }}">
-                        <input type="hidden" name="username" value="{{ doc.username }}">
+                        <input type="hidden" name="place_name" value="{{doc.place}}">
+                        <input type="hidden" name="username" value="{{doc.username}}">
                         
                         <button type="submit" class="btn btn-outline-danger">Delete</button>
                         
