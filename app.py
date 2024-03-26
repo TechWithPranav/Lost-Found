@@ -167,34 +167,6 @@ def loster():
 
 
 
-# @app.route('/loster_handler', methods=['GET', 'POST'])
-# def loster_handler():
-
-#     documents = None
-#     if request.method == 'POST':
-#         # Get the place name from the JSON data in the request
-#         place_data = request.json
-#         place_name = place_data.get('placeName')
-
-#         # Fetch documents from the collection associated with place_name
-#         collection = db.get_collection(place_name)
-#         documents = list(collection.find())
-
-
-#         # Redirect to the same route but with GET method to render the template
-#         return redirect(url_for('loster_handler', place_name=place_name,documents=documents))
-    
-#     # Get the place name from the query parameters if it exists
-#     place_name = request.args.get('place_name')
-
-#     collection = db.get_collection(place_name)
-#     documents = list(collection.find())
-#     # Render the template with the place name
-#     return render_template('loster_handler.html', place_name=place_name,documents=documents)
-
-
-
-
 
 
 @app.route('/add_place', methods=['POST'])
@@ -216,9 +188,72 @@ def add_place():
 
 
 
-# temp purpose 
 
 
+
+# Inserting data into particular places ------------
+
+@app.route('/insert_item',methods = ['GET','POST'])
+def insert():
+
+# note we use direct request.form but in this method we will not get default value none
+# but if we use .get then we can get default value None
+# both the methods are usefull
+    place_name = request.args.get('place_name')    
+    if request.method=='POST':
+         itemName = request.form['itemName']
+         itemCategory = request.form['itemCategory']
+         username = request.form['username']
+         userEmail = request.form['userEmail']
+         date = request.form['date']
+         status = request.form['status']
+         description = request.form['description']
+         place_name = request.form.get('place_name')
+
+         insert_data = {
+            'itemName': itemName,
+            'itemCategory': itemCategory,
+            'username': username,
+            'userEmail': userEmail,
+            'date': date,
+            'status': status,
+            'description': description,
+            'place': place_name,
+         }
+    
+        # accesing the collection from db
+         place_collection = db[place_name]
+         result = place_collection.insert_one(insert_data)
+         # Check if insertion was successful
+         print(place_name)
+         if result.inserted_id:
+            return 'Data inserted successfully!'
+         else:
+            return 'Failed to insert data.'
+
+
+    # print(place_name)
+    return render_template('insert.html',place_name=place_name)
+
+
+
+
+
+
+
+#--------------- update ----------------------
+
+app.route('/update_card',methods = ['GET','POST'])
+def update_card():
+    return render_template('insert.html')
+
+
+
+#--------------- delet card ----------------------
+
+app.route('/delete_card',methods = ['GET','POST'])
+def update_card():
+    return render_template('insert.html')
 
 
 

@@ -5,9 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loster</title>
+
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         .lost-item-card {
             background-color: #fff;
@@ -25,20 +28,7 @@
             /* Enhance shadow on hover */
         }
 
-        /* .item-image-box {
-      width: 150px;
-      height: 150px;
-      margin: 0 auto;
-      border-radius: 5px;
-      overflow: hidden;
-      border: 3px solid #ddd;
-    }
-    .item-image-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover; /* Ensure image fills the container
-    } 
-    */
+
         .item-info {
             padding: 20px;
             text-align: center;
@@ -54,17 +44,114 @@
         }
 
         .scrollable-buttons {
-    max-height: 150px; /* Set the maximum height for the scrollable area */
-    overflow-y: auto; /* Enable vertical scrollbar */
-}
+            max-height: 150px;
+            /* Set the maximum height for the scrollable area */
+            overflow-y: auto;
+            /* Enable vertical scrollbar */
+        }
 
-.btn_place {
-    /* Add styles for the buttons as needed */
-    /* For example: */
-    display: block;
-    width: 100%;
-    margin-bottom: 5px;
-}
+        .btn_place {
+            /* Add styles for the buttons as needed */
+            /* For example: */
+            display: block;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+
+
+        /* ----------- for button add -------------  */
+
+        .add-data-btn {
+
+            color: white;
+            /* White text */
+            border-radius: 50px;
+            /* Circular shape */
+            padding: 10px 15px;
+            /* Adjust padding for desired size */
+            font-size: 16px;
+            /* Adjust font size for desired size */
+            transition: all 0.3s ease-in-out;
+            /* Smooth animations */
+        }
+
+        .add-data-btn:hover {
+            background-color: #D70000;
+            /* Darker red on hover */
+            transform: scale(1.1);
+            /* Slight scale up on hover */
+        }
+
+
+
+
+        /* --------------- loster cards ----------------  */
+        .card {
+      margin-bottom: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: box-shadow 0.3s ease-in-out;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid red;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    .card-header {
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #dee2e6;
+      border-radius: 15px 15px 0 0;
+      padding: 1rem;
+    }
+
+    .card-body {
+      padding: 1rem;
+      transition: background-color 0.3s ease-in-out;
+      
+    }
+
+    .card-footer {
+      background-color: #f8f9fa;
+      border-top: 1px solid #dee2e6;
+      border-radius: 0 0 15px 15px;
+      padding: 1rem;
+    }
+
+    .card:hover .card-body {
+      background-color: #e9ecef;
+    }
+
+    .card:hover .card-title {
+      text-decoration: underline;
+    }
+
+    .card-title {
+      transition: text-decoration 0.3s ease-in-out;
+    }
+
+    .card:hover .card-header, .card:hover .card-footer {
+      background-color: #f0f0f0;
+    }
+
+    @keyframes clickAnimation {
+      0% {
+        transform: scale(1);
+        background-color: #ffffff;
+      }
+      50% {
+        transform: scale(1.05);
+        background-color: #cceeff;
+      }
+      100% {
+        transform: scale(1);
+        background-color: #ffffff;
+      }
+    }
+
 
     </style>
 </head>
@@ -89,20 +176,21 @@
         <div class="input-group mb-3">
             <input type="text" class="form-control" id="searchInput" placeholder="Search for places..."
                 aria-label="Search for places" aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary mx-2 round" type="button" id="addPlaceBtn" >Add Place</button>
+            <button class="btn btn-outline-secondary mx-2 round" type="button" id="addPlaceBtn">Add Place</button>
         </div>
 
         <div class="list-group" id="placesDropdown" style="display: none;">
             <!-- for displaying particular collections of places  -->
-    <div class="scrollable-buttons">
-        {% if collections %}
-            {% for place in collections %}
-                <button type="button" id="" class="btn_place list-group-item list-group-item-action">{{ place }}</button>
-            {% endfor %}
-        {% else %}
-            <button type="button" id="" class="btn_place list-group-item list-group-item-action">No buttons</button>
-        {% endif %}
-    </div>
+            <div class="scrollable-buttons">
+                {% if collections %}
+                {% for place in collections %}
+                <button type="button" id="" class="btn_place list-group-item list-group-item-action">{{ place
+                    }}</button>
+                {% endfor %}
+                {% else %}
+                <button type="button" id="" class="btn_place list-group-item list-group-item-action">No buttons</button>
+                {% endif %}
+            </div>
         </div>
 
     </div>
@@ -113,7 +201,7 @@
 
     <!-- ----------------------- loster cards for particular place ---------------------------  -->
 
-    <div class="container mt-5">
+    <!-- <div class="container mt-5">
         <div class="row">
             {% if documents %}
             {% for doc in documents %}
@@ -134,31 +222,119 @@
             </div>
             {% endif %}
         </div>
-    </div>
+    </div> -->
 
-    <!-- <h1>Place Name: {{ place_name }}</h1>
 
-    <h2>Documents:</h2>
-    <ul>
-        {% if documents %}
+
+
+
+    <div class="container mt-5   d-flex justify-content-start">
+        <div class="row   w-100">
+
+            {% if documents %}
             {% for doc in documents %}
-                <li>Document ID: {{ doc.username }}, Name: {{ doc.Name }}, Category: {{ doc.Category }}</li>
-            {% endfor %}
-        {% else %}
-            <li>No documents found.</li>
-        {% endif %}
-    </ul>
- -->
+            {% if doc.status!='Found' %}
+                
+            <div class="p-2 g-col-12  mx-3" style=" width: 28.5%;">
+                <div class="card " onclick="clickAnimation(this)">
+                    <div class="card-header">
+                        Item Details
+                    </div>
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">Item Name: {{ doc.itemName }}</h5>
+                        <p class="card-text">Item Category: {{ doc.itemCategory }}</p>
+                        <p class="card-text">Username: {{ doc.username }}</p>
+                        <p class="card-text">User Email: {{ doc.userEmail }}</p>
+                        <p class="card-text">Date: {{ doc.date }}</p>
+                        <p class="card-text">Status: {{ doc.status }}</p>
+                        <p class="card-text">Place: {{ doc.place }}</p>
+                        <p class="card-text">Description: {{ doc.description }}</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-evenly">
+                        
+                    <form action="/update_card" method="post">
+                        <!-- Hidden input fields to send place_name and username -->
+                        <input type="hidden" name="place_name" value="{{ doc.place }}">
+                        <input type="hidden" name="username" value="{{ doc.username }}">
+                        
+                        <!-- Submit button -->
+                        <button type="submit" class="btn btn-outline-success">Update</button>
+                    </form>
+
+                    <form action="/delete_card" method="post">
+                       
+                        <input type="hidden" name="place_name" value="{{ doc.place }}">
+                        <input type="hidden" name="username" value="{{ doc.username }}">
+                        
+                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                        
+                    </form>
+
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+          {% endfor %}
+            {% else %}
+            <div class="col">
+                <p>No documents found.</p>
+            </div>
+            {% endif %}
+
+        </div>
+      </div>
+      
+
+
+
+
+
+    <!-- ------------ inserting cards in particular place -----------  -->
+
+    <!-- // see if i want to use placename in js file so i can creeate placename like this -->
+    <input type="hidden" id="placeName" value="{{ place_name }}">
+
+
+
+    {% if place_name %}
+
+    <div style="margin-right: 110px; margin-bottom: 20px; display: flex;justify-content: flex-end;">
+        <button type="button" class="btn btn-success btn-lg add-data-btn rounded-circle"
+            onclick="redirect_to_insert_item()">
+            <i class="fa fa-plus "></i>
+        </button>
+    </div>
+    {% endif %}
+
+    <!-- {{place_name}} -->
 
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+    <!-- ---------------------------- js code ----------------------------  -->
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+
+
+
+
+// for adding new place collection when it doesnt exist ---------------------------------------- 
+
         document.getElementById('addPlaceBtn').addEventListener('click', function () {
             var placeName = prompt("Enter the place name:");
             if (placeName !== null && placeName !== '') {
@@ -194,36 +370,47 @@
 
         // for seach bar  ----------------------------------
         document.addEventListener('DOMContentLoaded', function () {
-    var searchInput = document.getElementById('searchInput');
-    var placesDropdown = document.getElementById('placesDropdown');
+            var searchInput = document.getElementById('searchInput');
+            var placesDropdown = document.getElementById('placesDropdown');
 
-    // Show the places dropdown when the search input is focused
-    searchInput.addEventListener('focus', function () {
-        placesDropdown.style.display = 'block';
-    });
+            // Show the places dropdown when the search input is focused
+            searchInput.addEventListener('focus', function () {
+                placesDropdown.style.display = 'block';
+            });
 
-    // Hide the places dropdown when the search input loses focus,
-    // but only if the user didn't click on a button inside the dropdown
-    searchInput.addEventListener('blur', function (event) {
-        setTimeout(function () {
-            if (!placesDropdown.contains(event.relatedTarget)) {
-                placesDropdown.style.display = 'none';
-            }
-        }, 200);
-    });
+            // Hide the places dropdown when the search input loses focus,
+            // but only if the user didn't click on a button inside the dropdown
+            searchInput.addEventListener('blur', function (event) {
+                setTimeout(function () {
+                    if (!placesDropdown.contains(event.relatedTarget)) {
+                        placesDropdown.style.display = 'none';
+                    }
+                }, 200);
+            });
 
-    // Keep the places dropdown visible even after selecting an item
-    placesDropdown.addEventListener('mouseleave', function () {
-        searchInput.focus();
-    });
-});
+            // Keep the places dropdown visible even after selecting an item
+            placesDropdown.addEventListener('mouseleave', function () {
+                searchInput.focus();
+            });
+        });
 
 
 
-        // for button for particular places 
+
+
+
+
+
+
+
+
+
+        // for button for particular places  --------------------------------------
 
         // Get all buttons with the class 'btn-place'
         var buttons = document.querySelectorAll('.btn_place');
+
+        var addbtn = document.querySelector('.add-data-btn')
 
         // Add event listener to each button
         buttons.forEach(function (button) {
@@ -231,6 +418,12 @@
                 // Get the text inside the button
                 var placeName = button.textContent.trim();
                 console.log("Place Name:", placeName);
+
+
+                // add button will display when any documemt is selected 
+                // addbtn.style.display='block!important';
+
+
 
                 // Construct the URL for the corresponding HTML page based on the place name
                 // var url = "/" + placeName.toLowerCase();
@@ -249,24 +442,45 @@
                     },
                     body: jsonData
                 })
-                .then(response => {
-            if (response.ok) {
-                console.log('POST request successful');
-                // Redirect to loster_handler.html with place_name as a query parameter
-                window.location.href = '/loster?place_name=' + encodeURIComponent(placeName);
-            } else {
-                console.error('POST request failed');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-                    
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('POST request successful');
+                            // Redirect to loster_handler.html with place_name as a query parameter
+                            window.location.href = '/loster?place_name=' + encodeURIComponent(placeName);
+                        } else {
+                            console.error('POST request failed');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+
 
             });
         });
 
 
+
+
+
+
+
+
+
+        // ----------- for inserting data into particular place ------------- 
+
+        function redirect_to_insert_item() {
+
+            // Access the value of placeName directly using document.getElementById
+            var placeName = document.getElementById('placeName').value;
+
+            // Use the placeName variable as needed
+            console.log("Place Name:", placeName);
+
+            var url = "/insert_item?place_name=" + encodeURIComponent(placeName);
+            window.location.href = url;
+
+        }
 
 
 
