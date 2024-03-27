@@ -165,21 +165,17 @@
 
 
 
-  
+
 
     {% if current_user.is_authenticated %}
-    
-    
 
-
-  
 
 
 
     <!-- -------------- start loster main ---------------------  -->
 
     <div class="container mt-5">
-        <h1>Loster</h1>
+        <h1>Founder</h1>
         <div class="input-group mb-3">
             <input type="text" class="form-control" id="searchInput" placeholder="Search for places..."
                 aria-label="Search for places" aria-describedby="button-addon2">
@@ -216,7 +212,7 @@
 
             {% if documents %}
             {% for doc in documents %}
-            {% if doc.status!='Found' %}
+            {% if doc.status!='Lost' %}
                 
             <div class="p-2 g-col-12  mx-3" style=" width: 28.5%;">
                 <div class="card " onclick="clickAnimation(this)">
@@ -418,7 +414,7 @@
 
                 // Send a POST request to '/loster' endpoint with placeName data
                 var jsonData = JSON.stringify({ placeName: placeName });
-                fetch('/loster', {
+                fetch('/founder', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -429,7 +425,7 @@
                         if (response.ok) {
                             console.log('POST request successful');
                             // Redirect to loster_handler.html with place_name as a query parameter
-                            window.location.href = '/loster?place_name=' + encodeURIComponent(placeName);
+                            window.location.href = '/founder?place_name=' + encodeURIComponent(placeName);
                         } else {
                             console.error('POST request failed');
                         }
@@ -474,11 +470,12 @@
 
 
 
+
+
+
 {% else %}
-{{'Log in to Use Lost Section'}}
+{{'Log in to Use Found Section'}}
 {% endif %}
-
-
 
 
 </body>

@@ -318,7 +318,10 @@ def update_card_main():
 
 @app.route('/delete_card',methods = ['GET','POST'])
 def delete_card():
+
+  if current_user.is_authenticated:
     cur = current_user.username
+
     main_user = request.form['username']
     place = request.form['place_name']
     print(main_user)
@@ -333,6 +336,57 @@ def delete_card():
 
     return "Card Deleted Successfully"
 
+  else :
+   return  "Login First to delete the card"
+
+
+
+
+
+
+
+# founder section -------------------------------------
+
+@app.route('/founder',methods = ['POST','GET'])
+def founder():
+    documents = None
+    if request.method == 'POST':
+        # Handle POST requests
+        place_data = request.json
+        place_name = place_data.get('placeName')
+
+        # Fetch documents from the collection associated with place_name
+        collection = db[place_name]
+        documents = list(collection.find())
+
+         # Get all collections to display in the dropdown
+        all_collections = db.list_collection_names()
+        collections_to_display = [c for c in all_collections if c not in ['users']]
+
+        # Redirect to the same route with place_name as query parameter
+        return render_template('founder.html', place_name=place_name, documents=documents, collections=collections_to_display)
+
+    else:
+        # Handle GET requests
+        place_name = request.args.get('place_name')
+        if place_name:
+            # Fetch documents from the collection associated with place_name
+            collection = db[place_name]
+            documents = list(collection.find())
+
+            
+            # Get all collections to display in the dropdown
+            all_collections = db.list_collection_names()
+            collections_to_display = [c for c in all_collections if c not in ['users']]
+
+            return render_template('founder.html', place_name=place_name, documents=documents, collections=collections_to_display)
+        
+        
+        # If no place name is provided, render the template with available collections
+        exclude_collections = ['users']
+        all_collections = db.list_collection_names()
+        collections_to_display = [c for c in all_collections if c not in exclude_collections]
+        return render_template('founder.html', collections=collections_to_display)    
 
 
 
