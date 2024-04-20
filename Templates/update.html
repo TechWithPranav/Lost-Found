@@ -56,11 +56,11 @@
           <form action="/update_card_main" method="post">
             <div class="mb-3">
               <label for="itemName" class="form-label">Item Name</label>
-              <input type="text" class="form-control" id="itemName" name="itemName" value="{{documents.itemName}}" required>
+              <input type="text" class="form-control" id="itemName" name="itemName" value="{{documents.itemName}}" >
             </div>
             <div class="mb-3">
               <label for="itemCategory" class="form-label">Item Category</label>
-              <select class="form-select" id="itemCategory" name="itemCategory" value="{{documents.itemCategory}}" required>
+              <select class="form-select" id="itemCategory" name="itemCategory" value="{{documents.itemCategory}}" >
                 <!-- <option value="" selected disabled>Select Category</option> -->
                 <option value="Electronics">Electronics</option>
                 <option value="Personal">Personal</option>
@@ -90,7 +90,7 @@
             </div>
             <div class="mb-3">
               <label for="description" class="form-label">Description</label>
-              <textarea class="form-control" id="description" name="description" rows="3"  required >{{documents.description}}</textarea>
+              <textarea class="form-control" id="description" name="description" rows="3"  >{{documents.description}}</textarea>
             </div>
             
 

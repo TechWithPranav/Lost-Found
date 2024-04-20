@@ -4,6 +4,7 @@ from flask import Flask, render_template, redirect, request, session, url_for, f
 from pymongo import MongoClient
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
 from bson import ObjectId  # Import ObjectId from bson module
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -17,6 +18,7 @@ app.secret_key = os.environ.get('FLASK_SECRET_KEY', secret_key)
 client = MongoClient('mongodb://localhost:27017/')
 db = client['Lost_And_Found']
 users_collection = db['users']
+history = db['history']
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -272,37 +274,42 @@ def update_card_main():
             description = request.form['description']
             place_name = request.form.get('place_name')
             
+            cur = current_user.username 
+
+            if cur == username:
+
           
             
-            # Get collection
-            place_collection = db[place_name]
-            print(place_collection.name)
-   
+             # Get collection
+             place_collection = db[place_name]
+             print(place_collection.name)
+    
 
-            update_data = {
-             'itemName': itemName,
-             'itemCategory': itemCategory,
-             'username': username,
-             'userEmail': userEmail,
-             'date': date,
-             'status': status,
-             'description': description,
-             'place': place_name,
+             update_data = {
+                'itemName': itemName,
+                'itemCategory': itemCategory,
+                'username': username,
+                'userEmail': userEmail,
+                'date': date,
+                'status': status,
+                'description': description,
+                'place': place_name,
              }
 
-            print(update_data)
-            # place_collection.update_one({'username':username},{'$set':update_data})
+             print(update_data)
+             # place_collection.update_one({'username':username},{'$set':update_data})
              # Perform update operation
-            cur = current_user.username
-            print(username)
-            print(cur)
-            result = place_collection.update_one({'username': username}, {'$set': update_data})
-            print("Update Result:", result.raw_result)
+             cur = current_user.username
+             print(username)
+             print(cur)
+             result = place_collection.update_one({'username': username}, {'$set': update_data})
+             print("Update Result:", result.raw_result)
+             return 'Data updated successfully!'
 
 
-            # Check if any update was successful
-            print("Data updated successfully!")
-            return 'Data updated successfully!'
+             # Check if any update was successful
+            else:
+             return 'The card your trying to delete not yours or please login again'
         except Exception as e:
             print("Error:", e)
             return 'Failed to update data. Error: ' + str(e)
@@ -323,13 +330,18 @@ def delete_card():
     cur = current_user.username
 
     main_user = request.form['username']
+    item_name = request.form['itemName']
     place = request.form['place_name']
     print(main_user)
     print(cur)
 
     if cur == main_user:
         place_collection = db[place]
-        result = place_collection.delete_one({'username':main_user})
+        # Query to find the document with the matching item name and username
+        query = {'itemName': item_name, 'username': main_user}
+    
+       # Delete the matching document if it exists
+        result = place_collection.delete_one(query)
         print(result)
     else:
         return "login again to delete the specific card or the card you are trying to delete is not yours!!!"
@@ -338,6 +350,71 @@ def delete_card():
 
   else :
    return  "Login First to delete the card"
+  
+
+
+#--------------- user_verified by founder ----------------------
+
+@app.route('/user_verified',methods = ['GET','POST'])
+def user_verified():
+
+  if current_user.is_authenticated:
+    cur = current_user.username
+
+    main_user = request.form['username']
+    item_name = request.form['itemName']
+    userEmail = request.form['userEmail']
+    place = request.form['place_name']
+    # Get the current date and time
+    current_datetime = datetime.now()
+    
+    # Convert the datetime object to a string if needed
+    current_date_str = current_datetime.strftime('%Y-%m-%d')
+    current_time_str = current_datetime.strftime('%H:%M:%S')
+
+    print(main_user)
+    print(cur)
+
+    if cur == main_user:
+        place_collection = db[place]
+        # Query to find the document with the matching item name and username
+        query = {'itemName': item_name, 'username': main_user}
+    
+
+        # store in database to track history of found items and loster has satified
+
+        insert_data = {
+            'itemName': item_name,
+            'username': main_user,
+            'userEmail': userEmail,
+            'date': current_date_str,
+            'time': current_time_str,
+            'place': place,
+        }
+    
+        # accesing the collection from db
+        history = db["history"]
+        result = history.insert_one(insert_data)
+         # Check if insertion was successful
+ 
+        if result.inserted_id:
+            result2 = place_collection.delete_one(query)
+            print(result2)
+            return 'User Verified successfully!'
+        
+        else:
+            return 'Failed to track data.'
+
+    else:
+        return "login again to verify user and delete the specific card or the card you are trying to delete is not yours!!!"
+
+  else :
+     return  "Login First to verify the card"
+
+
+
+
+
 
 
 
@@ -387,6 +464,32 @@ def founder():
         all_collections = db.list_collection_names()
         collections_to_display = [c for c in all_collections if c not in exclude_collections]
         return render_template('founder.html', collections=collections_to_display)    
+
+
+
+# recoverd section -------------------------------------
+@app.route('/recoverd',methods = ['GET','POST'])
+def recoverd():
+   if request.method == 'POST':
+        start_date_str = request.form['start_date']
+        end_date_str = request.form['end_date']
+
+        # Query MongoDB collection to get documents within the specified date range
+        # accesing the collection from db
+        history = db["history"]
+        recovered_items = list(history.find({'date': {'$gte': start_date_str, '$lte': end_date_str}}))
+        print(start_date_str)
+        print(end_date_str)
+        print(recovered_items)
+
+        
+        return render_template('recoverd.html', items=recovered_items)
+   return render_template('recoverd.html',items=[])
+  
+    
+
+
+
 
 
 

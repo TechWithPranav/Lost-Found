@@ -19,7 +19,7 @@
 </head>
 <body>
 
-    
+  
 
     <section id="navbar" class="">
         <div class="position-sticky top-0"> <nav class="navbar navbar-expand-lg bg-light shadow p-3  bg-body-tertiary">
@@ -41,7 +41,16 @@
                     <a class="nav-link fs-4 balsamiq-sans-bold" href="{{url_for('loster')}}">LOSTER</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link fs-4 balsamiq-sans-bold " href="{{url_for('founder')}}">FOUNDER</a>
+                    <a class="nav-link fs-4 balsamiq-sans-bold " href="{{url_for('founder')}}">FOUNDER</a></li>
+
+
+                    {% if current_user.username == "admin_!@#123" %}
+                      
+                    <li class="nav-item">
+                      <a class="nav-link fs-4 balsamiq-sans-bold " href="{{url_for('recoverd')}}">RECOVERED ITEMS</a></li>
+                    {% endif %}
+
+
                 
                 </ul>
       

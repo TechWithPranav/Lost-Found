@@ -244,9 +244,22 @@
                     <form action="/delete_card" method="post">
                        
                         <input type="hidden" name="place_name" value="{{doc.place}}">
+                        <input type="hidden" name="itemName" value="{{doc.itemName}}">
                         <input type="hidden" name="username" value="{{doc.username}}">
                         
                         <button type="submit" class="btn btn-outline-danger">Delete</button>
+                        
+                    </form>
+
+                    <form action="/user_verified" method="post">
+                       
+                        <input type="hidden" name="place_name" value="{{doc.place}}">
+                        <input type="hidden" name="username" value="{{doc.username}}">
+                        <input type="hidden" name="itemName" value="{{doc.itemName}}">
+                        <input type="hidden" name="userEmail" value="{{ doc.userEmail }}">
+
+                        
+                        <button type="submit" class="btn btn-outline-dark">User Verified</button>
                         
                     </form>
 
