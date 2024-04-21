@@ -53,7 +53,7 @@
           Item Details
         </div>
         <div class="card-body">
-          <form action="/update_card_main" method="post">
+          <form action="/update_card_main" method="post" enctype="multipart/form-data">
             <div class="mb-3">
               <label for="itemName" class="form-label">Item Name</label>
               <input type="text" class="form-control" id="itemName" name="itemName" value="{{documents.itemName}}" >
@@ -88,6 +88,12 @@
                 <option value="Found">Found</option>
               </select>
             </div>
+
+            <div class="mb-3">
+              <label for="itemImage" class="form-label">Item Image</label>
+              <input type="file" class="form-control" id="itemImage" name="itemImage" accept="image/*">
+            </div>
+
             <div class="mb-3">
               <label for="description" class="form-label">Description</label>
               <textarea class="form-control" id="description" name="description" rows="3"  >{{documents.description}}</textarea>

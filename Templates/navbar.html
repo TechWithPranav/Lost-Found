@@ -24,8 +24,8 @@
     <section id="navbar" class="">
         <div class="position-sticky top-0"> <nav class="navbar navbar-expand-lg bg-light shadow p-3  bg-body-tertiary">
             <div class="container-fluid">
-              <a class="navbar-brand animate__animated animate__flipInX animate__infinite animate__delay-1s" href="/">
-                <span class="d-block text-uppercase text-success fw-bold fs-3 balsamiq-sans-bold" style="text-stroke: 7px rgba(255, 255, 255, 0.678);">Lost & Found</span>
+              <a class="navbar-brand animate__animated animate__flipInX animate__infinite animate__delay-1s" href="/" style="text-decoration: none;">
+                <span class="d-block text-uppercase text-success fw-bold fs-3 balsamiq-sans-bold" style="text-stroke: 7px rgba(255, 255, 255, 0.678); text-decoration: none;">Lost & Found</span>
               </a>
       
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,19 +35,19 @@
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item">
-                    <a class="nav-link fs-4  balsamiq-sans-bold" aria-current="page" href="/">HOME</a>
+                    <a class="nav-link fs-4  balsamiq-sans-bold" aria-current="page" href="/" style="text-decoration: none;">HOME</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link fs-4 balsamiq-sans-bold" href="{{url_for('loster')}}">LOSTER</a>
+                    <a class="nav-link fs-4 balsamiq-sans-bold" href="{{url_for('loster')}}" style="text-decoration: none;">LOSTER</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link fs-4 balsamiq-sans-bold " href="{{url_for('founder')}}">FOUNDER</a></li>
+                    <a class="nav-link fs-4 balsamiq-sans-bold " href="{{url_for('founder')}}" style="text-decoration: none;">FOUNDER</a></li>
 
 
                     {% if current_user.username == "admin_!@#123" %}
                       
                     <li class="nav-item">
-                      <a class="nav-link fs-4 balsamiq-sans-bold " href="{{url_for('recoverd')}}">RECOVERED ITEMS</a></li>
+                      <a class="nav-link fs-4 balsamiq-sans-bold " href="{{url_for('recoverd')}}" style="text-decoration: none;">RECOVERED ITEMS</a></li>
                     {% endif %}
 
 
@@ -56,13 +56,13 @@
       
                 {% if current_user.is_authenticated %}
             <a href="{{url_for('profile')}}"><img src="{{ url_for('static', filename='images/male_profile.gif') }}" alt="" srcset="" class="w-125 mx-3 rounded-circle"></a>
-            <a href="{{ url_for('logout') }}" class="btn btn-outline-dark mx-2 fs-5">Logout</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-dark mx-2 fs-5" style="text-decoration: none;">Logout</a>
             {% else %}
             <form class="d-flex" action="{{ url_for('login') }}" role="signup">
-                <button class="btn btn-outline-danger mx-2 fs-5 balsamiq-sans-bold" type="submit">Login</button>
+                <button class="btn btn-outline-danger mx-2 fs-5 balsamiq-sans-bold" type="submit" style="text-decoration: none;">Login</button>
             </form>
             <form class="d-flex" action="{{ url_for('signup') }}" role="signup">
-                <button class="btn btn-outline-success mx-2 fs-5 balsamiq-sans-bold" type="submit">Signup</button>
+                <button class="btn btn-outline-success mx-2 fs-5 balsamiq-sans-bold" type="submit" style="text-decoration: none;">Signup</button>
             </form>
             {% endif %}
 

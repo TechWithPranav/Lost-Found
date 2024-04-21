@@ -11,7 +11,9 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <link rel='stylesheet' href='https://rawcdn.githack.com/SochavaAG/example-mycode/master/_common/css/reset.css'>
+   <style>
         .lost-item-card {
             background-color: #fff;
             border-radius: 10px;
@@ -153,6 +155,162 @@
     }
 
 
+
+
+
+
+
+    /* ----------- card new -------- */
+
+    .ag-courses_box {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  width: 100%;
+  /* border: 2px solid red; */
+  justify-content: center;
+
+  padding: 50px 0;
+}
+.ag-courses_item {
+  -ms-flex-preferred-size: calc(33.33333% - 30px);
+  flex-basis: calc(23.33333% - 30px);
+
+  margin: 0 15px 30px;
+
+  overflow: hidden;
+
+  border-radius: 28px;
+
+  width: 200px;
+  /* border: 2px solid red; */
+}
+.ag-courses-item_link {
+  display: block;
+  padding: 30px 20px;
+  background-color: #121212;
+
+  overflow: hidden;
+
+  position: relative;
+}
+.ag-courses-item_link:hover,
+.ag-courses-item_link:hover .ag-courses-item_date {
+  /* text-decoration: none; */
+  color: #FFF;
+}
+.ag-courses-item_link:hover .ag-courses-item_bg {
+  -webkit-transform: scale(10);
+  -ms-transform: scale(10);
+  transform: scale(10);
+}
+.ag-courses-item_title {
+  min-height: 87px;
+  margin: 0 0 25px;
+
+  overflow: hidden;
+
+  font-weight: bold;
+  font-size: 30px;
+  color: #FFF;
+
+  z-index: 2;
+  position: relative;
+}
+.ag-courses-item_date-box {
+  font-size: 18px;
+  color: #FFF;
+
+  z-index: 2;
+  position: relative;
+}
+.ag-courses-item_date {
+  font-weight: bold;
+  color: #f9b234;
+
+  -webkit-transition: color .5s ease;
+  -o-transition: color .5s ease;
+  transition: color .5s ease
+}
+.ag-courses-item_bg {
+  height: 128px;
+  width: 128px;
+  background-color: #f9b234;
+
+  z-index: 1;
+  position: absolute;
+  top: -75px;
+  right: -75px;
+
+  border-radius: 50%;
+
+  -webkit-transition: all .5s ease;
+  -o-transition: all .5s ease;
+  transition: all .5s ease;
+}
+.ag-courses_item:nth-child(2n) .ag-courses-item_bg {
+  background-color: #3ecd5e;
+}
+.ag-courses_item:nth-child(3n) .ag-courses-item_bg {
+  background-color: #e44002;
+}
+.ag-courses_item:nth-child(4n) .ag-courses-item_bg {
+  background-color: #952aff;
+}
+.ag-courses_item:nth-child(5n) .ag-courses-item_bg {
+  background-color: #cd3e94;
+}
+.ag-courses_item:nth-child(6n) .ag-courses-item_bg {
+  background-color: #4c49ea;
+}
+
+
+
+@media only screen and (max-width: 979px) {
+  .ag-courses_item {
+    -ms-flex-preferred-size: calc(50% - 30px);
+    flex-basis: calc(50% - 30px);
+  }
+  .ag-courses-item_title {
+    font-size: 24px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .ag-format-container {
+    width: 96%;
+  }
+
+}
+@media only screen and (max-width: 639px) {
+  .ag-courses_item {
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+  }
+  .ag-courses-item_title {
+    min-height: 72px;
+    line-height: 1;
+
+    font-size: 24px;
+  }
+  .ag-courses-item_link {
+    padding: 22px 40px;
+  }
+  .ag-courses-item_date-box {
+    font-size: 16px;
+  }
+}
+
+
+.decorate_rec{
+    color: white;
+}
+
     </style>
 </head>
 
@@ -160,7 +318,12 @@
 
     <!-- ------------- navabar ------------------  -->
     {% include 'navbar.html'%}
-
+<style>
+    a{
+        text-decoration: none;
+        list-style: none;
+    }
+</style>
     <!-- ----------------end navbar -----------------  -->
 
 
@@ -211,7 +374,7 @@
 
 
 
-    <div class="container mt-5   d-flex justify-content-start">
+    <!-- <div class="container mt-5   d-flex justify-content-start">
         <div class="row   w-100">
 
             {% if documents %}
@@ -237,11 +400,11 @@
                     <div class="card-footer d-flex justify-content-evenly"> 
                         
                     <form action="/update_card" method="post">
-                        <!-- Hidden input fields to send place_name and username -->
+                        Hidden input fields to send place_name and username
                         <input type="hidden" name="place_name" value="{{doc.place}}">
                         <input type="hidden" name="username" value="{{doc.username}}">
                         
-                        <!-- Submit button -->
+                        Submit button
                         <button type="submit" class="btn btn-outline-success">Update</button>
                     </form>
 
@@ -267,8 +430,58 @@
             {% endif %}
 
         </div>
-      </div>
+      </div> -->
       
+
+
+
+
+      <div class="ag-format-container">
+        <div class="ag-courses_box">
+
+
+         
+            {% if documents %}
+            {% for doc in documents %}
+            {% if doc.status!='Found' %}
+
+
+          <div class="ag-courses_item" style=" background-color: #000;">
+            <a href="{{ url_for('item_detail', item_id=doc._id,place = doc.place) }}" class="ag-courses-item_link" style="text-decoration: none;">
+              <div class="ag-courses-item_bg"></div>
+              <h5 class=" decorate_rec ag-courses-item_date-box" style="margin-bottom: 10px;">ITEM NAME : {{doc.itemName}}</h5>
+              <p class="card-text ag-courses-item_date-box">USERNAME: {{ doc.username }}</p>
+              <p class="card-text ag-courses-item_date-box" style="margin-top: -10px;">STATUS : {{ doc.status }}</p>
+              <p class="card-text ag-courses-item_date-box" style="margin-top: -10px;">PLACE: {{ doc.place }} </p>
+              <div class="ag-courses-item_date-box" style="margin-top: -10px;">
+                DATE:
+                <span class="ag-courses-item_date">
+                    {{ doc.date }}
+                </span>
+              </div>
+          
+              
+            </a>
+        </div>
+      
+
+          {% endif %}
+            
+          {% endfor %}
+            {% else %}
+            <div class="col">
+                <p>No documents found.</p>
+            </div>
+            {% endif %}
+    
+        </div>
+      </div>
+
+
+
+
+
+
 
 
 
@@ -480,6 +693,7 @@
 
 
 
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+            justify-content: center;
+
+        }
+
+        .card {
+            flex: 0 0 600px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 700px;
+        }
+
+        .container img {
+            max-width: 100%;
+            max-height: 90%;
+            margin-top: 4%;
+            /* width: 800px; */
+            border-radius: 10px;
+        }
+
+        .texts {
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        .texts button {
+            border: none;
+            padding: 5px 15px;
+            background: #566270;
+            color: #fff;
+            font-weight: 600;
+            transition: all 0.3s ease-in;
+        }
+
+        .texts button:hover {
+            background: #E0E3DA;
+            color: #566270;
+            cursor: pointer;
+        }
+
+
+
+
+
+
+
+        /* ------- for image mcq ---  */
+
+
+        .image-container {
+            position: relative;
+            width: 400px;
+            height: 200px;
+            overflow: hidden;
+            /* Ensures no overflow from the blurred image */
+
+        }
+
+        #itemImage {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Ensures the image covers the container */
+            filter: blur(6px);
+            /* Adjusts the blur effect */
+        }
+        #itemImage2 {
+            width: 80%;
+            height: 200px;
+            object-fit: cover;
+            /* Ensures the image covers the container */
+            /* filter: blur(6px); */
+            /* Adjusts the blur effect */
+        }
+
+        .verify-button {
+            position: absolute;
+            top: 40%;
+            /* Centers the button vertically */
+            left: 33%;
+            /* Centers the button horizontally */
+            transform: translate(-50%, -50%);
+            /* Ensures perfect centering */
+            padding: 10px 20px;
+            background-color: white;
+            /* Button background */
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+
+
+        /* ---- verify button ----  */
+
+
+        .button-92 {
+            --c: #fff;
+            /* text color */
+            background: linear-gradient(90deg, #0000 33%, #fff5, #0000 67%) var(--_p, 100%)/300% no-repeat,
+                #004dff;
+            /* background color */
+            color: #0000;
+            border: none;
+            transform: perspective(500px) rotateY(calc(20deg*var(--_i, -1)));
+            text-shadow: calc(var(--_i, -1)* 0.08em) -.01em 0 var(--c),
+                calc(var(--_i, -1)*-0.08em) .01em 2px #0004;
+            outline-offset: .1em;
+            transition: 0.3s;
+        }
+
+        .button-92:hover,
+        .button-92:focus-visible {
+            --_p: 0%;
+            --_i: 1;
+        }
+
+        .button-92:active {
+            text-shadow: none;
+            color: var(--c);
+            box-shadow: inset 0 0 9e9q #0005;
+            transition: 0s;
+        }
+
+        .button-92 {
+            font-weight: bold;
+            font-size: 1.7rem;
+            margin: 0;
+            cursor: pointer;
+            padding: .1em .3em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ----------------navbar ----------------------  -->
+
+    {% include 'navbar.html' %}
+
+
+
+
+
+
+    <main class="container mt-2">
+        <section class="card">
+            <!-- <img src="https://farm1.staticflickr.com/505/31980127730_ea81689413_m.jpg" alt="sample image"> -->
+            {% if doc.image.filename != "default" %}
+            <center>
+
+                {% if veri_mcq.verified %}
+                <img id="itemImage2" src="data:{{ doc.image.mimetype }};base64,{{ doc.image.data }}" alt="Item Image" >     
+                {% else %}
+                    
+             
+                <div class="image-container">
+                    <img src="data:{{ doc.image.mimetype }};base64,{{ doc.image.data }}" alt="Item Image"
+                        id="itemImage">
+                    <button class="verify-button button-92" role="button" data-bs-toggle="modal"
+                        data-bs-target="#verificationModal">Verify</button>
+                </div>
+                {% endif %}
+
+                <!-- Modal -->
+                <div class="modal fade" id="verificationModal" tabindex="-1" aria-labelledby="verificationModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="verificationModalLabel">Verification Questions</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="verificationForm">
+                                    <div class="mb-3">
+                                        <label for="answer1" class="form-label">{{doc.question1}}</label>
+                                        <input type="text" class="form-control" id="answer1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="answer2" class="form-label">{{doc.question2}}</label>
+                                        <input type="text" class="form-control" id="answer2" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="answer3" class="form-label">{{doc.question3}}</label>
+                                        <input type="text" class="form-control" id="answer3" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </center>
+            {% endif %}
+            <div class="texts" style="">
+                <h2 style="display: flex; margin-left: 19%; ">ITEM NAME : {{ doc.itemName }}</h2>
+
+                <p class="" style="display: flex; margin-left: 19%;  clear: left;">
+                    <span class="fs-5 fw-bold">ITEM CATEGORY:</span> <span class="fs-5 ms-2">{{ doc.itemCategory
+                        }}</span>
+                </p>
+                <p class="" style="display: flex; margin-left: 19%;   clear: left;">
+                    <span class="fs-5 fw-bold">USERNAME:</span><span class="fs-5 ms-2">{{ doc.username }}</span>
+                </p>
+                <p class="" style="display: flex; margin-left: 19%;  clear: left;">
+                    <span class="fs-5 fw-bold">USER EMAIL :</span><span class="fs-5 ms-2"> {{ doc.userEmail }}</span>
+                </p>
+                <p class="" style="display: flex; margin-left: 19%;   clear: left;">
+                    <span class="fs-5 fw-bold">DATE :</span> <span class="fs-5 ms-2">{{ doc.date }}</span>
+                </p>
+                <p class="" style="display: flex; margin-left: 19%;   clear: left;">
+                    <span class="fs-5 fw-bold">STATUS :</span> <span class="fs-5 ms-2">{{ doc.status }}</span>
+                </p>
+                <p class="" style="display: flex; margin-left: 19%;   clear: left;">
+                    <span class="fs-5 fw-bold">PLACE :</span><span class="fs-5 ms-2"> {{ doc.place }}</span>
+                </p>
+                <p class="" style="display: flex; margin-left: 19%;margin-right: 19%;  ">
+                    <span class="fs-5 fw-bold">DESCRIPTION:</span><span class="fs-5"
+                        style="display: flex; justify-content: flex-start;"> {{ doc.description }}</span>
+                </p>
+
+
+                <!-- <button type="submit">More details..</button> -->
+            </div>
+            <hr>
+            <div style="display: flex; justify-content: space-around;">
+                <form action="/update_card" method="post"
+                    style=" display: flex; justify-content: flex-start; margin-bottom: 4%; width: 100%; margin-left: 2%; margin-right: 2%;">
+                    <!-- Hidden input fields to send place_name and username -->
+                    <input type="hidden" name="place_name" value="{{doc.place}}">
+                    <input type="hidden" name="username" value="{{doc.username}}">
+                    <input type="hidden" name="itemName" value="{{doc.itemName}}">
+
+
+                    <!-- Submit button -->
+                    <button type="submit" class="btn btn-outline-success" style="width: 100%;">Update</button>
+                </form>
+
+                <form action="/delete_card" method="post"
+                    style="width: 100%; margin-bottom: 4%;  margin-left: 2%; margin-right: 2%;">
+
+                    <input type="hidden" name="itemName" value="{{doc.itemName}}">
+                    <input type="hidden" name="place_name" value="{{doc.place}}">
+                    <input type="hidden" name="username" value="{{doc.username}}">
+
+                    <button type="submit" class="btn btn-outline-danger" style="width: 100%;">Delete</button>
+
+                </form>
+
+                <form action="/user_verified" method="post"
+                    style="width: 100%; margin-bottom: 4%;  margin-left: 2%; margin-right: 2%;">
+
+                    <input type="hidden" name="place_name" value="{{doc.place}}">
+                    <input type="hidden" name="username" value="{{doc.username}}">
+                    <input type="hidden" name="itemName" value="{{doc.itemName}}">
+                    <input type="hidden" name="userEmail" value="{{ doc.userEmail }}">
+
+
+                    <button type="submit" class="btn btn-outline-dark" style="width: 100%;">User Verified</button>
+
+                </form>
+
+
+            </div>
+
+
+
+        </section>
+    </main>
+
+
+
+
+
+    <script>
+        document.getElementById('verificationForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Collect the answers and user details
+            const answer1 = document.getElementById('answer1').value;
+            const answer2 = document.getElementById('answer2').value;
+            const answer3 = document.getElementById('answer3').value;
+            const id_user = "{{ doc._id }}";
+            const username = "{{ doc.username }}";
+            const item_name = "{{ doc.itemName }}";
+            const place_name = "{{ doc.place }}";
+
+            // Check if the answers are correct
+            if (answer1 === "{{ doc.answer1 }}" && answer2 === "{{ doc.answer2 }}" && answer3 === "{{ doc.answer3 }}") {
+                // Remove blur from image and disable the verify button
+                document.getElementById('itemImage').style.filter = "none";
+                document.querySelector('.verify-button').disabled = true;
+
+                // Send AJAX request to server to store verification status
+                try {
+                    const response = await fetch('/verified_mcq', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ verified: true, id_user, username, item_name, place_name })
+                    });
+
+                    if (response.ok) {
+                        const responseData = await response.json(); // Assuming server sends back JSON
+                        if (responseData.success) {
+
+                            // Encode the parameters to ensure they are safe to include in a URL
+                            const encodedUserId = encodeURIComponent(id_user);
+                            const encodedPlace = encodeURIComponent(place_name);
+
+                            // Build the URL with both parameters
+                            window.location.href = '/verified_mcq?id_user=' + encodedUserId + '&place=' + encodedPlace; // Redirect if successful
+                        } else {
+                            throw new Error(responseData.message || 'Verification failed, but no message provided.');
+                        }
+                    } else {
+                        throw new Error('Failed to connect to the server.');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert('Failed to verify: ' + error.message);
+                }
+            } else {
+                alert('Incorrect answers, please try again.');
+            }
+        });
+    </script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

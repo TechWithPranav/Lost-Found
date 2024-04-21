@@ -30,6 +30,28 @@
   .form-control {
     margin-bottom: 15px;
   }
+
+
+
+  /* ----- placeholder color -  */
+  #question1::placeholder {
+    color: red;  /* Change to your preferred color */
+}
+  #question2::placeholder {
+    color: red;  /* Change to your preferred color */
+}
+  #question3::placeholder {
+    color: red;  /* Change to your preferred color */
+}
+  #answer1::placeholder {
+    color: green;  /* Change to your preferred color */
+}
+  #answer1::placeholder {
+    color: green;  /* Change to your preferred color */
+}
+  #answer1::placeholder {
+    color: green;  /* Change to your preferred color */
+}
 </style>
 </head>
 <body>
@@ -51,7 +73,7 @@
           Item Details
         </div>
         <div class="card-body">
-          <form action="/insert_item" method="post">
+          <form action="/insert_item" method="post" enctype="multipart/form-data">
             <div class="mb-3">
               <label for="itemName" class="form-label">Item Name</label>
               <input type="text" class="form-control" id="itemName" name="itemName" required>
@@ -80,12 +102,49 @@
             </div>
             <div class="mb-3">
               <label for="status" class="form-label">Status</label>
-              <select class="form-select" id="status" name="status" required>
+              <select class="form-select" id="status" name="status" required onchange="toggleQuestions(this.value)" required>
                 <option value="" selected disabled>Select Status</option>
                 <option value="Lost">Lost</option>
                 <option value="Found">Found</option>
               </select>
             </div>
+
+            <!-- Hidden questions container -->
+<div id="additionalQuestions" style="display: none;">
+  <div class="mb-3">
+      <input type="text" class="form-control" id="question1" name="question1" placeholder="Question1......." >
+      <input type="text" class="form-control" id="answer1" name="answer1" placeholder="Answer1......." >
+  </div>
+  <div class="mb-3">
+      <input type="text" class="form-control" id="question2" name="question2"placeholder="Question2......." >
+      <input type="text" class="form-control" id="answer2" name="answer2" placeholder="Answer2.......">
+  </div>
+  <div class="mb-3">
+      <input type="text" class="form-control" id="question3" name="question3" placeholder="Question3.......">
+      <input type="text" class="form-control" id="answer3" name="answer3" placeholder="Answer3.......">
+  </div>
+</div>
+
+<script>
+  function toggleQuestions(status) {
+      var questionsDiv = document.getElementById('additionalQuestions');
+      if (status === 'Found') {
+          questionsDiv.style.display = 'block'; // Show the questions
+      } else {
+          questionsDiv.style.display = 'none'; // Hide the questions
+      }
+  }
+  </script>
+  
+
+
+
+
+            <div class="mb-3">
+              <label for="itemImage" class="form-label">Item Image</label>
+              <input type="file" class="form-control" id="itemImage" name="itemImage" accept="image/*">
+            </div>
+            
             <div class="mb-3">
               <label for="description" class="form-label">Description</label>
               <textarea class="form-control" id="description" name="description" rows="3" required></textarea>

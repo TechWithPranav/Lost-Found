@@ -5,8 +5,14 @@ from pymongo import MongoClient
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
 from bson import ObjectId  # Import ObjectId from bson module
 from datetime import datetime
+from werkzeug.utils import secure_filename
+import base64
+import requests
+
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads/'  # Ensure this directory exists
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Limit file size to 16MB
 
 #sdfshh
 # Generate a secure secret key
@@ -19,6 +25,7 @@ client = MongoClient('mongodb://localhost:27017/')
 db = client['Lost_And_Found']
 users_collection = db['users']
 history = db['history']
+mcq_solved_verified = db['mcq_solved_verified']
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -138,7 +145,7 @@ def loster():
 
          # Get all collections to display in the dropdown
         all_collections = db.list_collection_names()
-        collections_to_display = [c for c in all_collections if c not in ['users']]
+        collections_to_display = [c for c in all_collections if c not in ['history','users']]
 
         # Redirect to the same route with place_name as query parameter
         return render_template('loster.html', place_name=place_name, documents=documents, collections=collections_to_display)
@@ -154,16 +161,55 @@ def loster():
             
             # Get all collections to display in the dropdown
             all_collections = db.list_collection_names()
-            collections_to_display = [c for c in all_collections if c not in ['users']]
+            collections_to_display = [c for c in all_collections if c not in ['users','history']]
 
             return render_template('loster.html', place_name=place_name, documents=documents, collections=collections_to_display)
         
         
         # If no place name is provided, render the template with available collections
-        exclude_collections = ['users']
+        exclude_collections = ['users','history']
         all_collections = db.list_collection_names()
         collections_to_display = [c for c in all_collections if c not in exclude_collections]
         return render_template('loster.html', collections=collections_to_display)
+
+
+
+
+
+
+# item details for loster ----------------
+
+@app.route('/item/<item_id>/<place>')
+def item_detail(item_id,place):
+    collection = db[place]
+    item = collection.find_one({'_id': ObjectId(item_id)})
+    # print(collection)
+    # print(item)
+    if item:
+        return render_template('item_detail.html', doc=item)
+    else:
+        return 'Item not found', 404
+    
+
+
+
+# item details for founder ----------------
+
+@app.route('/item_detail2/<item_id>/<place>')
+def item_detail2(item_id,place):
+    collection = db[place]
+    item = collection.find_one({'_id': ObjectId(item_id)})
+
+    verified_mcq_collection = db['mcq_solved_verified']       
+    veri_mcq = verified_mcq_collection.find_one({'id_user': item_id})  
+    # print(collection)
+    # print(item)
+    if item:
+        return render_template('item_detail2.html', doc=item,veri_mcq=veri_mcq)
+    else:
+        return 'Item not found', 404
+
+
 
 
 
@@ -201,7 +247,10 @@ def insert():
 # note we use direct request.form but in this method we will not get default value none
 # but if we use .get then we can get default value None
 # both the methods are usefull
-    place_name = request.args.get('place_name')    
+    place_name = request.args.get('place_name')  
+    
+    DEFAULT_IMAGE_URL = 'https://via.placeholder.com/150'
+
     if request.method=='POST':
          itemName = request.form['itemName']
          itemCategory = request.form['itemCategory']
@@ -212,6 +261,62 @@ def insert():
          description = request.form['description']
          place_name = request.form.get('place_name')
 
+         item_image  = request.files['itemImage']
+        #  print(item_image)
+         if item_image and item_image.filename != '' and allowed_file(item_image.filename):
+             filename = secure_filename(item_image.filename)
+             mimetype = item_image.mimetype
+             image_data = item_image.read()
+             image_b64 = base64.b64encode(image_data).decode('utf-8')
+         else:
+             # No file uploaded, or the wrong file type was provided
+             filename = 'default'
+             mimetype = 'image/png'
+             image_b64 = base64.b64encode(requests.get(DEFAULT_IMAGE_URL).content).decode('utf-8')
+
+         if status == "Found":
+             question1 = request.form['question1']
+             answer1 = request.form['answer1']             
+             question2 = request.form['question2']
+             answer2 = request.form['answer2']             
+             question3 = request.form['question3']
+             answer3 = request.form['answer3']
+
+             insert_data = {
+                'itemName': itemName,
+                'itemCategory': itemCategory,
+                'username': username,
+                'userEmail': userEmail,
+                'date': date,
+                'status': status,
+                'description': description,
+                'place': place_name,
+                'image': {
+                    'filename': filename,
+                    'mimetype': mimetype,
+                     'data': image_b64
+                },
+                'question1':question1,
+                'answer1':answer1,
+                'question2':question2,
+                'answer2':answer2,
+                'question3':question3,
+                'answer3':answer3,
+
+             }
+    
+             # accesing the collection from db
+             place_collection = db[place_name]
+             result = place_collection.insert_one(insert_data)
+            # Check if insertion was successful
+             print(place_name)
+             if result.inserted_id:
+              return 'Data inserted successfully!'
+             else:
+              return 'Failed to insert data.'     
+
+
+                 
          insert_data = {
             'itemName': itemName,
             'itemCategory': itemCategory,
@@ -221,6 +326,11 @@ def insert():
             'status': status,
             'description': description,
             'place': place_name,
+            'image': {
+              'filename': filename,
+              'mimetype': mimetype,
+              'data': image_b64
+             }
          }
     
         # accesing the collection from db
@@ -236,6 +346,11 @@ def insert():
 
     # print(place_name)
     return render_template('insert.html',place_name=place_name)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
+
 
 
 
@@ -262,6 +377,7 @@ def update_card():
 
 @app.route('/update_card_main', methods=['GET', 'POST'])
 def update_card_main():
+    DEFAULT_IMAGE_URL = 'https://via.placeholder.com/150'
     if request.method == 'POST':
         try:
             # Extract form data
@@ -273,6 +389,19 @@ def update_card_main():
             status = request.form['status']
             description = request.form['description']
             place_name = request.form.get('place_name')
+
+            item_image  = request.files['itemImage']
+        #  print(item_image)
+            if item_image and item_image.filename != '' and allowed_file(item_image.filename):
+             filename = secure_filename(item_image.filename)
+             mimetype = item_image.mimetype
+             image_data = item_image.read()
+             image_b64 = base64.b64encode(image_data).decode('utf-8')
+            else:
+             # No file uploaded, or the wrong file type was provided
+             filename = 'default'
+             mimetype = 'image/png'
+             image_b64 = base64.b64encode(requests.get(DEFAULT_IMAGE_URL).content).decode('utf-8')
             
             cur = current_user.username 
 
@@ -294,6 +423,11 @@ def update_card_main():
                 'status': status,
                 'description': description,
                 'place': place_name,
+                'image': {
+                 'filename': filename,
+                 'mimetype': mimetype,
+                 'data': image_b64
+             }
              }
 
              print(update_data)
@@ -330,10 +464,12 @@ def delete_card():
     cur = current_user.username
 
     main_user = request.form['username']
-    item_name = request.form['itemName']
+    item_name = request.form.get('itemName')
     place = request.form['place_name']
     print(main_user)
     print(cur)
+    print(item_name)
+    print(place)
 
     if cur == main_user:
         place_collection = db[place]
@@ -482,7 +618,7 @@ def recoverd():
         print(end_date_str)
         print(recovered_items)
 
-        
+
         return render_template('recoverd.html', items=recovered_items)
    return render_template('recoverd.html',items=[])
   
@@ -490,6 +626,70 @@ def recoverd():
 
 
 
+# verification of mcq ------------- 
+
+# @app.route('/verified_mcq', methods=['POST','GET'])
+# def verify_mcq():
+#     data = request.get_json()
+#     verified = data.get('verified', False)
+#     username = data.get('username', False)
+#     id_user = data.get('id_user', False)
+
+#     if verified:
+#         # Assume `mcq_verified` is your collection in MongoDB
+#         # Store verification status
+#         db.mcq_solved_verified.insert_one({'verified': True,'username':username,'id_user':id_user})
+
+#         return jsonify({'success': True}), 200
+#     else:
+#         return jsonify({'success': False, 'message': 'Verification failed'}), 400
+
+@app.route('/verified_mcq', methods=['GET', 'POST'])
+def verify_mcq():
+
+    data = None
+    verified = None
+    username = None
+    id_user = None
+    item_name = None    
+    if request.method == 'POST':
+        # Handle POST request
+        data = request.get_json()
+        verified = data.get('verified', False)
+        username = data.get('username', False)
+        id_user = data.get('id_user', False)
+        item_name = data.get('item_name', False)
+        place_name = data.get('place_name', False)
+
+        print(verified)
+        print(username)
+        print(id_user)
+        print(item_name)
+        print(place_name)
+        db.mcq_solved_verified.insert_one({'verified': True,'username':username,'id_user':id_user,'item_name':item_name,'place_name':place_name})
+
+
+        # Assuming data handling logic here
+
+
+        return jsonify({'success': True}), 200
+    elif request.method == 'GET':
+        # doc = collection.find_one({'_id': ObjectId(document_id)})
+        doc_id = request.args.get('id_user') 
+        place_name = request.args.get('place') 
+        print(doc_id)
+        print(place_name)
+
+        place = db[place_name]
+        doc = place.find_one({'_id': ObjectId(doc_id)})     
+        print(doc)
+
+        verified_mcq_collection = db['mcq_solved_verified']       
+        veri_mcq = verified_mcq_collection.find_one({'id_user': doc_id})  
+        print(veri_mcq)
+
+
+        return render_template('item_detail2.html',doc= doc,veri_mcq=veri_mcq)
 
 
 
