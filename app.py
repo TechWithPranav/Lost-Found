@@ -145,7 +145,7 @@ def loster():
 
          # Get all collections to display in the dropdown
         all_collections = db.list_collection_names()
-        collections_to_display = [c for c in all_collections if c not in ['history','users']]
+        collections_to_display = [c for c in all_collections if c not in ['users','history','mcq_solved_verified']]
 
         # Redirect to the same route with place_name as query parameter
         return render_template('loster.html', place_name=place_name, documents=documents, collections=collections_to_display)
@@ -161,13 +161,13 @@ def loster():
             
             # Get all collections to display in the dropdown
             all_collections = db.list_collection_names()
-            collections_to_display = [c for c in all_collections if c not in ['users','history']]
+            collections_to_display = [c for c in all_collections if c not in ['users','history','mcq_solved_verified']]
 
             return render_template('loster.html', place_name=place_name, documents=documents, collections=collections_to_display)
         
         
         # If no place name is provided, render the template with available collections
-        exclude_collections = ['users','history']
+        exclude_collections = ['users','history','mcq_solved_verified']
         all_collections = db.list_collection_names()
         collections_to_display = [c for c in all_collections if c not in exclude_collections]
         return render_template('loster.html', collections=collections_to_display)
@@ -200,10 +200,16 @@ def item_detail2(item_id,place):
     collection = db[place]
     item = collection.find_one({'_id': ObjectId(item_id)})
 
-    verified_mcq_collection = db['mcq_solved_verified']       
-    veri_mcq = verified_mcq_collection.find_one({'id_user': item_id})  
-    # print(collection)
-    # print(item)
+    verified_mcq_collection = db['mcq_solved_verified']  
+         
+    print(item.get('username'))
+    print(item_id)
+    print(current_user.username)
+    if (item.get('username')) == (current_user.username):
+        veri_mcq = verified_mcq_collection.find_one({'id_user': item_id})  
+    else:
+        veri_mcq = False
+
     if item:
         return render_template('item_detail2.html', doc=item,veri_mcq=veri_mcq)
     else:
@@ -574,7 +580,7 @@ def founder():
 
          # Get all collections to display in the dropdown
         all_collections = db.list_collection_names()
-        collections_to_display = [c for c in all_collections if c not in ['users']]
+        collections_to_display = [c for c in all_collections if c not in ['users','history','mcq_solved_verified']]
 
         # Redirect to the same route with place_name as query parameter
         return render_template('founder.html', place_name=place_name, documents=documents, collections=collections_to_display)
@@ -590,13 +596,13 @@ def founder():
             
             # Get all collections to display in the dropdown
             all_collections = db.list_collection_names()
-            collections_to_display = [c for c in all_collections if c not in ['users']]
+            collections_to_display = [c for c in all_collections if c not in ['users','history','mcq_solved_verified']]
 
             return render_template('founder.html', place_name=place_name, documents=documents, collections=collections_to_display)
         
         
         # If no place name is provided, render the template with available collections
-        exclude_collections = ['users']
+        exclude_collections = ['users','history','mcq_solved_verified']
         all_collections = db.list_collection_names()
         collections_to_display = [c for c in all_collections if c not in exclude_collections]
         return render_template('founder.html', collections=collections_to_display)    
@@ -677,16 +683,19 @@ def verify_mcq():
         # doc = collection.find_one({'_id': ObjectId(document_id)})
         doc_id = request.args.get('id_user') 
         place_name = request.args.get('place') 
-        print(doc_id)
-        print(place_name)
+        # print(doc_id)
+        # print(place_name)
 
         place = db[place_name]
         doc = place.find_one({'_id': ObjectId(doc_id)})     
-        print(doc)
+        # print(doc)
 
+        
         verified_mcq_collection = db['mcq_solved_verified']       
         veri_mcq = verified_mcq_collection.find_one({'id_user': doc_id})  
         print(veri_mcq)
+        print('hey')
+        # print(current_user._id)
 
 
         return render_template('item_detail2.html',doc= doc,veri_mcq=veri_mcq)

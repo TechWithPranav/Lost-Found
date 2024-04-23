@@ -319,7 +319,7 @@
 
 
 
-
+<p>{{current_user._id}}</p>
 
     {% if current_user.is_authenticated %}
 
@@ -448,6 +448,7 @@
          
             {% if documents %}
             {% for doc in documents %}
+
             {% if doc.status!='Lost' %}
 
 
@@ -495,10 +496,13 @@
 
 
 
+
+
     <!-- ------------ inserting cards in particular place -----------  -->
 
     <!-- // see if i want to use placename in js file so i can creeate placename like this -->
     <input type="hidden" id="placeName" value="{{ place_name }}">
+
 
 
 
@@ -513,6 +517,7 @@
     {% endif %}
 
     <!-- {{place_name}} -->
+
 
 
 
