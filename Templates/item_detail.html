@@ -15,15 +15,19 @@
   
 }
 .card{
-     flex: 0 0 400px; margin: 10px;
+     flex: 0 0 500px; margin: 10px;
+     display: flex;
      border: 1px solid #ccc;
      box-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-     text-align: center;
-     width: 700px;
+ 
+
+     width: 900px;
 }
 .container img{
-     max-width: 100%;
+     max-width: 500px;
      max-height: 40%;
+     /* border: 2px solid red; */
+     /* width: 100%; */
      /* width: 800px; */
 }
 .texts{
@@ -91,18 +95,18 @@
       </div>
        -->
 
-       <main class="container mt-2" >
-        <section class="card" >
+       <main class="container mt-2 " >
+        <section class="card p-5" >
            <!-- <img src="https://farm1.staticflickr.com/505/31980127730_ea81689413_m.jpg" alt="sample image"> -->
            {% if doc.image.filename != "default" %}
             
            
-           <img src="data:{{ doc.image.mimetype }};base64,{{ doc.image.data }}" alt="Item Image" style="width: 400px; height: 200px;">
+           <img src="data:{{ doc.image.mimetype }};base64,{{ doc.image.data }}" alt="Item Image" style="width: 100; height: 200px;">
            {% endif %}
             <div class="texts" style="">
                  <h2 style="float: left;">ITEM NAME : {{ doc.itemName }}</h2>
 
-                 <p class="" style=" display: flex; justify-content: flex-start; clear: left;">
+                 <p class="" style=" display: flex; justify-content: flex-center; clear: left; ">
                   <span class="fs-5 fw-bold">ITEM CATEGORY:</span> <span class="fs-5 ms-2">{{ doc.itemCategory }}</span>
                 </p>
                  <p class="" style=" display: flex; justify-content: flex-start; clear: left;">
@@ -121,7 +125,7 @@
                   <span class="fs-5 fw-bold">PLACE :</span><span class="fs-5 ms-2"> {{ doc.place }}</span>
                 </p>
                  <p class="" style=" display: flex; justify-content: flex-start; clear: left;">
-                  <span class="fs-5 fw-bold">DESCRIPTION :</span><span class="fs-5 ms-2"> {{ doc.description }}</span>
+                  <span class="fs-5 fw-bold">DESCRIPTION </span><span class="fs-5 ms-2"> {{ doc.description }}</span>
                 </p>
               
                
