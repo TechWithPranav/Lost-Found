@@ -1,0 +1,42 @@
+[{
+  "_id": {
+    "$oid": "66aa7e6243f3b4129c8d2de7"
+  },
+  "firstname": "Pranav",
+  "middlename": "Vijay",
+  "lastname": "Kolhe",
+  "username": "pranav123",
+  "email": "pranavkolhe44@gmail.com",
+  "password": "123",
+  "address": "Sidhivinayak Nagar,Medankarwadi,chakan,pune 410501",
+  "dob": "2004-08-06",
+  "mobile": "9393939393"
+},
+{
+  "_id": {
+    "$oid": "66aa83ea3522f56c717bc214"
+  },
+  "firstname": "Aditya",
+  "middlename": "Vilas",
+  "lastname": "Konde",
+  "username": "aditya123",
+  "email": "aditya@gmail.com",
+  "password": "123",
+  "address": "Hadapsar,pune",
+  "dob": "2003-08-06",
+  "mobile": "8484848483"
+},
+{
+  "_id": {
+    "$oid": "66aa84c83522f56c717bc216"
+  },
+  "firstname": "Rohit",
+  "middlename": "Millin",
+  "lastname": "Kolhe",
+  "username": "admin123",
+  "email": "rohit@gmail.com",
+  "password": "123",
+  "address": "Kondhwa,pune",
+  "dob": "2000-08-06",
+  "mobile": "4545454545"
+}]

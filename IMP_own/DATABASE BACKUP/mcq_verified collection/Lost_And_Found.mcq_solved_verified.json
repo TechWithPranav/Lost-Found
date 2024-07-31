@@ -1,0 +1,10 @@
+[{
+  "_id": {
+    "$oid": "66aaa2a907eae94cc76364e4"
+  },
+  "verified": true,
+  "username": "admin123",
+  "id_user": "66aa9bcf43f3b4129c8d2df0",
+  "item_name": "Bottle",
+  "place_name": "VIIT CAMPUS"
+}]
