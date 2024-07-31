@@ -11,7 +11,7 @@ import requests
 
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads/'  # Ensure this directory exists
+app.config['UPLOAD_FOLDER'] = 'uploads/'  # Ensure this directory exists...
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Limit file size to 16MB
 
 #sdfshh
